@@ -43,7 +43,6 @@ from util import (string_to_float, get_blacklist, vorbestellungen_einlesen,
 init()
 
 GEWICHTE = ('1', '2', '3')
-gewicht = '1'
 my_isbn = None
 interaktiv = True
 
@@ -122,7 +121,7 @@ class Buch(object):
             print "keine Ladenpreisempfehlung."
         print ''
 
-    def print_entscheidung(self):
+    def print_entscheidung(self, gewicht):
         for kategorie in self.Entscheidung[gewicht]:
             # '\x1b[32mW\x1b[0m'
             print ' ' + (kategorie if (not(learners_mode)) else lerntexte[kategorie]),
@@ -713,7 +712,6 @@ print "Es wurden", len(ortzumlesen), 'Einträge für "Ein Ort zum Lesen" eingelese
 
 
 while 1:  # Während das Programm läuft
-    gewicht = '1'
     if interaktiv:  # Interaktiver Modus
         while 1:  # Bis eine gültige Eingabe gemacht wurde
             print '_' * 80, '\n'
@@ -779,8 +777,7 @@ while 1:  # Während das Programm läuft
                     print 'Es gab einen Fehler mit der Datei.'
 
             elif eingabe in GEWICHTE:
-                gewicht = eingabe
-                buch.print_entscheidung()
+                buch.print_entscheidung(eingabe)
                 continue
             elif eingabe.lower() == 'ende':
                 exit()
@@ -929,7 +926,9 @@ while 1:  # Während das Programm läuft
                 if gewicht in GEWICHTE:
                     print ''
                     break
-        buch.print_entscheidung()
+        else:
+            gewicht = '1'
+        buch.print_entscheidung(gewicht)
 
         if my_isbn in blacklist:
             print '\n\x1b[30;31mAchtung, dieses Buch steht auf der schwarzen Liste!\x1b[0m'
