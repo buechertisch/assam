@@ -36,7 +36,13 @@ class Verkauf(threading.Thread):
 
     def log(self, ereignis):
         # FIXME
-        pass
+        my_isbn = unknown
+
+
+        logfile = open('fehler-isbns.csv', 'a')
+        print >> logfile, time.strftime(
+            '%Y-%m-%d_%H:%M') + ';' + my_isbn + ';' + ereignis
+        logfile.close()
 
 class Amazon(Verkauf):
 

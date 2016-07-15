@@ -94,13 +94,6 @@ def debug_response(response):
     resp.close()
 
 
-def log(ereignis):
-    logfile = open('fehler-isbns.csv', 'a')
-    print >> logfile, time.strftime(
-        '%Y-%m-%d_%H:%M') + ';' + my_isbn + ';' + ereignis
-    logfile.close()
-
-
 def float_to_string(preis):  # Konvertiert z.B. 2.5 zu "2,50".
     return ("%#.2f" % preis).replace('.', ',')
 
