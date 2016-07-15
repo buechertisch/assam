@@ -35,12 +35,13 @@ def get_blacklist():
 
     return blacklistheader, blacklist
 
-def get_ort_zum_lesen():
+def get_ort_zum_lesen(csv_file=ort_zum_lesen):
     try:
-        ortzumlesencsv = csv.reader(open(ort_zum_lesen, 'rb'), delimiter=',')
+        ortzumlesencsv = csv.reader(open(csv_file, 'rb'), delimiter=',')
         ortzumlesenheader = ortzumlesencsv.next()[1:]
     except Exception:
         ortzumlesencsv = []
+        ortzumlesenheader = []
         print ('Es konnte keine Liste für "Ein Ort zum Lesen" eingelesen '
                'werden. Die Datei', ort_zum_lesen, "existiert nicht oder "
                "hat ein falsches Format.")
