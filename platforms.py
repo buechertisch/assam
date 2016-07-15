@@ -36,7 +36,7 @@ class Verkauf(threading.Thread):
 
     def log(self, ereignis):
         # FIXME
-        my_isbn = unknown
+        my_isbn = "unknown"
 
 
         logfile = open('fehler-isbns.csv', 'a')
