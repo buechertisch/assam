@@ -31,7 +31,6 @@ import time
 import httplib
 import re
 import isbn
-import threading
 import csv
 import webbrowser
 from config import *
