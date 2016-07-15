@@ -38,7 +38,7 @@ from config import *
 from colorama import init
 init()
 
-gewichte = ('1', '2', '3')
+GEWICHTE = ('1', '2', '3')
 gewicht = '1'
 my_isbn = None
 interaktiv = True
@@ -121,7 +121,7 @@ def print_gewinntabelle():
 
     for plattform in plattformen_created:  # Tabellenkörper
         print '%-20s' % plattform.Name + preis_format(plattform.Preis),
-        for gewicht in gewichte:
+        for gewicht in GEWICHTE:
             print preis_format(plattform.Gewinn[gewicht]),
         print ' ' + plattform.Kommentar,
         print ''
@@ -165,7 +165,7 @@ class Buch(object):
             # Gewinne von non-Amazon, non-Buchfreund-Plattformen (!) einsammeln
             if plattformobjekt in [amazon, buchfreund]:
                 continue
-            for gewicht in gewichte:
+            for gewicht in GEWICHTE:
                 self.Gewinn[gewicht].append(plattformobjekt.Gewinn[gewicht])
 
         if sum(self.Verkaufsanteile) > 0:  # UVP berechnen
@@ -175,7 +175,7 @@ class Buch(object):
                 self.Verkaufsanteile), (amazon.Preis if amazon.Preis else ''))
 
         # Entscheiden:
-        for gewicht in gewichte:
+        for gewicht in GEWICHTE:
             self.Gewinn[gewicht].sort(reverse=True)
             if self.Preise == []:  # Wenn das Buch gar nicht angeboten wird: O/Ox
                 self.Entscheidung[gewicht].append('O/Ox')
@@ -840,7 +840,7 @@ while 1:  # Während das Programm läuft
                 except Exception:
                     print 'Es gab einen Fehler mit der Datei.'
 
-            elif eingabe in gewichte:
+            elif eingabe in GEWICHTE:
                 gewicht = eingabe
                 print_entscheidung()
                 continue
@@ -983,7 +983,7 @@ while 1:  # Während das Programm läuft
                     'Das Ergebnis ist gewichtsabhängig, bitte gib die Gewichtsklasse an (<450g: 1, 450-950g: 2, >950g: 3.): ')
                 if gewicht == '':
                     gewicht = '1'
-                if gewicht in gewichte:
+                if gewicht in GEWICHTE:
                     print ''
                     break
         print_entscheidung()
