@@ -102,19 +102,6 @@ def print_gewinntabelle():
     print ''
 
 
-def print_UVP():
-    if buch.UVP:
-        print "Ladenpreisempfehlung:", float_to_string(buch.UVP) + "¤"
-    else:
-        print "keine Ladenpreisempfehlung."
-    print ''
-
-
-def print_entscheidung():
-    for kategorie in buch.Entscheidung[gewicht]:
-        # '\x1b[32mW\x1b[0m'
-        print ' ' + (kategorie if (not(learners_mode)) else lerntexte[kategorie]),
-    print ''
 
 
 class Buch(object):
@@ -127,6 +114,19 @@ class Buch(object):
         self.Entscheidung = {'1': [], '2': [], '3': []}
         self.UVP = None
         self.gewichtsrelevanz = False
+
+    def print_UVP(self):
+        if self.UVP:
+            print "Ladenpreisempfehlung:", float_to_string(self.UVP) + "¤"
+        else:
+            print "keine Ladenpreisempfehlung."
+        print ''
+
+    def print_entscheidung(self):
+        for kategorie in self.Entscheidung[gewicht]:
+            # '\x1b[32mW\x1b[0m'
+            print ' ' + (kategorie if (not(learners_mode)) else lerntexte[kategorie]),
+        print ''
 
     def start(self):
         for plattformobjekt in plattformen_created:
@@ -780,7 +780,7 @@ while 1:  # Während das Programm läuft
 
             elif eingabe in GEWICHTE:
                 gewicht = eingabe
-                print_entscheidung()
+                buch.print_entscheidung()
                 continue
             elif eingabe.lower() == 'ende':
                 exit()
@@ -887,7 +887,7 @@ while 1:  # Während das Programm läuft
             print '\nFertig!'
             continue
 
-# Alle Objekte initialisieren
+    # Alle Objekte initialisieren
     buch = Buch()  # mit leeren Attributen
     # Enthält später die tatsächlich generierten Objekte.
     plattformen_created = []
@@ -919,7 +919,7 @@ while 1:  # Während das Programm läuft
         print_title()
         if tabelle:
             print_gewinntabelle()
-        print_UVP()
+        buch.print_UVP()
         if buch.gewichtsrelevanz:
             while 1:
                 gewicht = raw_input(
@@ -929,7 +929,7 @@ while 1:  # Während das Programm läuft
                 if gewicht in GEWICHTE:
                     print ''
                     break
-        print_entscheidung()
+        buch.print_entscheidung()
 
         if my_isbn in blacklist:
             print '\n\x1b[30;31mAchtung, dieses Buch steht auf der schwarzen Liste!\x1b[0m'
