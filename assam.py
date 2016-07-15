@@ -36,6 +36,9 @@ import csv
 import webbrowser
 from config import *
 from colorama import init
+
+from util import string_to_float, get_blacklist
+
 init()
 
 GEWICHTE = ('1', '2', '3')
@@ -95,9 +98,6 @@ def log(ereignis):
         '%Y-%m-%d_%H:%M') + ';' + my_isbn + ';' + ereignis
     logfile.close()
 
-
-def string_to_float(preis):  # Konvertiert z.B. "2,50" zu 2.5.
-    return float(preis.replace(',', '.'))
 
 
 def float_to_string(preis):  # Konvertiert z.B. 2.5 zu "2,50".
@@ -731,25 +731,7 @@ vorbestellungen_schreiben(vorbestellungsdatei)
 
 print "Es wurden", sum(len(vorbestellungen[isbn]) for isbn in vorbestellungen), "Vorbestellungen für", len(vorbestellungen), "verschiedene Titel eingelesen"
 
-try:  # Blacklist
-    blacklistcsv = csv.reader(open(schwarze_liste, 'rb'), delimiter=';')
-    blacklistheader = blacklistcsv.next()[1:]
-except Exception:
-    blacklistcsv = []
-    print "Es konnte keine Schwarze Liste eingelesen werden. Die Datei", schwarze_liste, "existiert nicht oder hat ein falsches Format."
-blacklist = {}
-zeile = 1
-for row in blacklistcsv:
-    zeile += 1
-    try:
-        if row == []:
-            continue
-        if isbn.isValid(row[0]):
-            blacklist[isbn.toI13(row[0])] = row[1:]
-        else:
-            print "Es ist ein Fehler beim Einlesen der Schwarzen Liste aufgetreten. Zeile", zeile, "enthält keine gültige ISBN."
-    except Exception:
-        print "Es ist ein Fehler beim Einlesen der Schwarzen Liste aufgetreten. Zeile", zeile, "enthält einen Fehler."
+blacklistheader, blacklist = get_blacklist()
 print "Es wurden", len(blacklist), "Einträge der Schwarzen Liste eingelesen"
 
 try:  # Ort-zum-Lesen
