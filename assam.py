@@ -37,7 +37,7 @@ import webbrowser
 from config import *
 from colorama import init
 
-from util import string_to_float, get_blacklist
+from util import string_to_float, get_blacklist, vorbestellungen_einlesen
 
 init()
 
@@ -45,33 +45,6 @@ GEWICHTE = ('1', '2', '3')
 gewicht = '1'
 my_isbn = None
 interaktiv = True
-
-
-def vorbestellungen_einlesen(vorbestellungsdatei):
-    try:  # Vorbestellungen
-        vorbestellungscsv = csv.reader(
-            open(vorbestellungsdatei, 'rb'), delimiter=';')
-        vorbestellungsheader = vorbestellungscsv.next()[1:]
-    except Exception:
-        vorbestellungscsv = []
-        print "Es konnten keine Vorbestellungen eingelesen werden. Die Datei", vorbestellungsdatei, "existiert nicht oder hat ein falsches Format."
-    vorbestellungen = {}
-    zeile = 1
-    for row in vorbestellungscsv:
-        zeile += 1
-        try:
-            if row == []:
-                continue
-            if isbn.isValid(row[0]):
-                if isbn.toI13(row[0]) not in vorbestellungen:
-                    vorbestellungen[isbn.toI13(row[0])] = [row[1:]]
-                else:
-                    vorbestellungen[isbn.toI13(row[0])].append(row[1:])
-            else:
-                print "Es ist ein Fehler beim Einlesen der Vorbestellungen aufgetreten. Zeile", zeile, "enthält keine gültige ISBN."
-        except Exception:
-            print "Es ist ein Fehler beim Einlesen der Vorbestellungen aufgetreten. Zeile", zeile, "enthält einen Fehler."
-    return(vorbestellungsheader, vorbestellungen)
 
 
 def vorbestellungen_schreiben(vorbestellungsdatei):
