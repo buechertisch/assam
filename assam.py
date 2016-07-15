@@ -104,7 +104,7 @@ class Platforms(object):
 
 
 
-def vorbestellungen_schreiben(vorbestellungsdatei):
+def vorbestellungen_schreiben(vorbestellungsdatei, vorbestellungsheader):
     vorbestellungscsv = open(vorbestellungsdatei, 'wb')
     csvwriter = csv.writer(vorbestellungscsv, delimiter=';',
                            quotechar='"', quoting=csv.QUOTE_ALL)
@@ -266,7 +266,7 @@ print '\n' + 'Willkommen bei Assam - ' + intros[int(str(time.time())[-1]) % len(
 vorbestellungsheader, vorbestellungen = vorbestellungen_einlesen(
     vorbestellungsdatei)
 # um evt. Fehlerzeilen in der Datei zu entfernen
-vorbestellungen_schreiben(vorbestellungsdatei)
+vorbestellungen_schreiben(vorbestellungsdatei, vorbestellungsheader)
 
 print "Es wurden", sum(len(vorbestellungen[isbn]) for isbn in vorbestellungen), "Vorbestellungen für", len(vorbestellungen), "verschiedene Titel eingelesen"
 
