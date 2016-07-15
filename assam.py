@@ -104,7 +104,7 @@ class Platforms(object):
 
 
 
-def vorbestellungen_schreiben(vorbestellungsdatei, vorbestellungsheader):
+def vorbestellungen_schreiben(vorbestellungsdatei, vorbestellungsheader, vorbestellungen):
     vorbestellungscsv = open(vorbestellungsdatei, 'wb')
     csvwriter = csv.writer(vorbestellungscsv, delimiter=';',
                            quotechar='"', quoting=csv.QUOTE_ALL)
@@ -266,7 +266,7 @@ print '\n' + 'Willkommen bei Assam - ' + intros[int(str(time.time())[-1]) % len(
 vorbestellungsheader, vorbestellungen = vorbestellungen_einlesen(
     vorbestellungsdatei)
 # um evt. Fehlerzeilen in der Datei zu entfernen
-vorbestellungen_schreiben(vorbestellungsdatei, vorbestellungsheader)
+vorbestellungen_schreiben(vorbestellungsdatei, vorbestellungsheader, vorbestellungen)
 
 print "Es wurden", sum(len(vorbestellungen[isbn]) for isbn in vorbestellungen), "Vorbestellungen für", len(vorbestellungen), "verschiedene Titel eingelesen"
 
@@ -311,7 +311,7 @@ while 1:  # Während das Programm läuft
                     else:
                         neue_vorbestellung += [raw_input(i + '? ')]
                 vorbestellungen[key] += [neue_vorbestellung]
-                vorbestellungen_schreiben(vorbestellungsdatei)
+                vorbestellungen_schreiben(vorbestellungsdatei, vorbestellungsheader, vorbestellungen)
 
             elif 'datei' in eingabe.lower():
                 try:
@@ -586,7 +586,7 @@ while 1:  # Während das Programm läuft
 
             if loeschen != 'n':
                 vorbestellungen[my_isbn].pop(loeschen - 1)
-                vorbestellungen_schreiben(vorbestellungsdatei)
+                vorbestellungen_schreiben(vorbestellungsdatei, vorbestellungsheader, vorbestellungen)
 
             # andere_loeschen=''
             # if not einfach and andere_loeschen != 'n':
