@@ -16,6 +16,29 @@ class UtilTests(unittest.TestCase):
         self.assertEqual(header, ["Titel", "Autor"])
         self.assertEqual(data, {})
 
+    def test_get_ort_zum_lesen_file_with_data(self):
+        with open("testfile.csv", "w") as csv_file:
+            csv_file.write('"ISBN","Titel","Autor"\n')
+            csv_file.write('"1-58488-540-8","some title","some author"\n')
+            csv_file.write('"3-499-22415-1","another title","another author"\n')
+        header, data = get_ort_zum_lesen(csv_file="testfile.csv")
+
+        self.assertEqual(header, ["Titel", "Autor"])
+        self.assertEqual(data, {
+                '9781584885405': ['some title', 'some author'],
+                '9783499224157': ['another title', 'another author']})
+
+    def test_get_ort_zum_lesen_file_with_one_invalid_line(self):
+        with open("testfile.csv", "w") as csv_file:
+            csv_file.write('"ISBN","Titel","Autor"\n')
+            csv_file.write('"123456","some title","some author"\n')
+            csv_file.write('"3-499-22415-1","another title","another author"\n')
+        header, data = get_ort_zum_lesen(csv_file="testfile.csv")
+
+        self.assertEqual(header, ["Titel", "Autor"])
+        self.assertEqual(data, {
+                '9783499224157': ['another title', 'another author']})
+
     def test_get_ort_zum_lesen_nonexisting_file(self):
         header, data = get_ort_zum_lesen(csv_file="nonexstingfile")
         self.assertEqual(header, [])
