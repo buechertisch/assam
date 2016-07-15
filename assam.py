@@ -682,18 +682,18 @@ class Ebay(Verkauf):
                         self.Preis += self.Porto
                     except Exception:
                         self.Kommentar += 'Auslesefehler (Porto) [1]. '
-                        log('27')
+                        self.log('27')
                 else:
                     next  # Portofrei
             else:
                 self.Kommentar += 'Auslesefehler (Porto) [2]. '
-                log('28')
+                self.log('28')
 
             if self.Preis:
                 self.gewinn()
         except Exception:
             self.Kommentar += 'Offline oder Zeitüberschreitung. '
-            log('29')
+            self.log('29')
 #=Programmstart===========================================================
 
 # Hier wird jedes _mögliche_ Plattformobjekt mit None-Werten initialisiert
