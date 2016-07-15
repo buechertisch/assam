@@ -960,7 +960,12 @@ while 1:  # Während das Programm läuft
         # z.B.: plattformen_created.append(amazon)
         plattformen_created.append(eval(plattform.lower()))
         eval(plattform.lower() + '.start()')				# z.B.: amazon.start()
-    time_warning_alt = 0  # jede Plattform wird frühestens dann gejoint wenn die Antwort der vorangegangenen Plattform vollständig ist. Überschreitet eine Plattf. das Zeitlimit, erscheinen alle folgenden auch verzögert. Die Warnung ist aber nur dann gerechtfertigt wenn sie über die fremdverschuldete Verzögerung hinaus länger brauchen.
+    # Jede Plattform wird frühestens dann gejoint wenn die Antwort der
+    # vorangegangenen Plattform vollständig ist. Überschreitet eine Plattform
+    # das Zeitlimit, erscheinen alle folgenden auch verzögert. Die Warnung ist
+    # aber nur dann gerechtfertigt wenn sie über die fremdverschuldete
+    # Verzögerung hinaus länger brauchen.
+    time_warning_alt = 0
     for plattformobjekt in plattformen_created:
         plattformobjekt.join()
         plattformobjekt.Dauer = (round(time.time() - plattformobjekt.Start, 1))
