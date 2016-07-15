@@ -176,7 +176,7 @@ class Buch(object):
             print ' ' + (kategorie if (not(learners_mode)) else lerntexte[kategorie]),
         print ''
 
-    def start(self):
+    def start(self, markt):
         for plattformobjekt in PF.plattformen_created:
             if plattformobjekt.Preis:  # Preise einsammeln
                 self.Preise.append(plattformobjekt.Preis)
@@ -457,7 +457,7 @@ while 1:  # Während das Programm läuft
             plattformobjekt.Kommentar += 'Lange Antwortzeit (' + str(
                 plattformobjekt.Dauer).replace('.', ',') + ' sec). '
 
-    buch.start()  # Füllt die Attribute von buch mit Werten
+    buch.start(markt)  # Füllt die Attribute von buch mit Werten
 
     if interaktiv:
         print ''
