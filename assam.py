@@ -37,7 +37,8 @@ import webbrowser
 from config import *
 from colorama import init
 
-from util import string_to_float, get_blacklist, vorbestellungen_einlesen
+from util import (string_to_float, get_blacklist, vorbestellungen_einlesen,
+                  get_ort_zum_lesen)
 
 init()
 
@@ -707,25 +708,7 @@ print "Es wurden", sum(len(vorbestellungen[isbn]) for isbn in vorbestellungen), 
 blacklistheader, blacklist = get_blacklist()
 print "Es wurden", len(blacklist), "Einträge der Schwarzen Liste eingelesen"
 
-try:  # Ort-zum-Lesen
-    ortzumlesencsv = csv.reader(open(ort_zum_lesen, 'rb'), delimiter=',')
-    ortzumlesenheader = ortzumlesencsv.next()[1:]
-except Exception:
-    ortzumlesencsv = []
-    print 'Es konnte keine Liste für "Ein Ort zum Lesen" eingelesen werden. Die Datei', ort_zum_lesen, "existiert nicht oder hat ein falsches Format."
-ortzumlesen = {}
-zeile = 1
-for row in ortzumlesencsv:
-    zeile += 1
-    try:
-        if row == []:
-            continue
-        if isbn.isValid(row[0]):
-            ortzumlesen[isbn.toI13(row[0])] = row[1:]
-        else:
-            print 'Es ist ein Fehler beim Einlesen der Liste für "Ein Ort zum Lesen" aufgetreten. Zeile', zeile, "enthält keine gültige ISBN."
-    except Exception:
-        print 'Es ist ein Fehler beim Einlesen der Liste für "Ein Ort zum Lesen" aufgetreten. Zeile', zeile, "enthält einen Fehler."
+ortzumlesenheader, ortzumlesen = get_ort_zum_lesen()
 print "Es wurden", len(ortzumlesen), 'Einträge für "Ein Ort zum Lesen" eingelesen'
 
 
