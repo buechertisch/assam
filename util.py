@@ -9,12 +9,13 @@ def string_to_float(preis):  # Konvertiert z.B. "2,50" zu 2.5.
     return float(preis.replace(',', '.'))
 
 
-def get_blacklist():
+def get_blacklist(blacklist_file=schwarze_liste):
     try:
-        blacklistcsv = csv.reader(open(schwarze_liste, 'rb'), delimiter=';')
+        blacklistcsv = csv.reader(open(blacklist_file, 'rb'), delimiter=';')
         blacklistheader = blacklistcsv.next()[1:]
     except Exception:
         blacklistcsv = []
+        blacklistheader = []
         print ("Es konnte keine Schwarze Liste eingelesen werden. Die Datei"
                "{0} existiert nicht oder hat ein falsches Format.".format(schwarze_liste))
     blacklist = {}

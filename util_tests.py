@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import unittest
 
-from util import string_to_float, get_ort_zum_lesen
+from util import string_to_float, get_ort_zum_lesen, get_blacklist
 
 
 class UtilTests(unittest.TestCase):
@@ -43,6 +43,17 @@ class UtilTests(unittest.TestCase):
         header, data = get_ort_zum_lesen(csv_file="nonexstingfile")
         self.assertEqual(header, [])
         self.assertEqual(data, {})
+
+    def test_get_blacklist(self):
+        header, blacklist = get_blacklist()
+        # The "ISBN" field must be removed from the header.
+        self.assertEqual(header, ["Titel", "Autorin", "Anmerkungen"])
+        self.assertEqual(blacklist, {})
+
+    def test_get_blacklist_nonexisting_file(self):
+        header, blacklist = get_blacklist("nonexistingfile")
+        self.assertEqual(header, [])
+        self.assertEqual(blacklist, {})
 
 
 if __name__ == "__main__":
