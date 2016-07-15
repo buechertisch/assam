@@ -48,6 +48,14 @@ interaktiv = True
 from platforms import Amazon, ZVAB, Booklooker, Buchfreund, Easyankauf, Ebay
 
 PLATFORMS_AVAILABLE_CLASSES = [Amazon, ZVAB, Booklooker, Buchfreund, Easyankauf, Ebay]
+PLATFORMS = {
+    'amazon': Amazon,
+    'zvab': ZVAB,
+    'booklooker': Booklooker,
+    'buchfreund': Buchfreund,
+    'easyankauf': Easyankauf,
+    'ebay': Ebay
+}
 
 class Platforms(object):
     def __init__(self):
@@ -74,6 +82,26 @@ class Platforms(object):
             platform.start()
             setattr(self, platform_name.lower(), platform)
             self.plattformen_created.append(platform)
+
+    def remove_requested_platforms(self, platform_string):
+        platform_string = platform_string.lower()
+        plattformbefehl = False
+        # Nur die Plattformen testen, die aktuell angefragt werden. [:]
+        # ist nötig, falls der Nutzer zwei aufeinanderfolgende
+        # Plattformen entfernen will. Mit Eliminieren der ersten würde
+        # die zweite in der folgenden Schleife nicht mehr abgefragt.
+        for plattform_name in plattformen_requested[:]:
+            plattform_name = plattform_name.lower()
+            if plattform_name in platform_string:
+                plattformbefehl = True
+                plattformen_requested.remove(plattform_name)
+
+                platform_cls = PLATFORMS[plattform_name]
+                platform = platform_cls(isbn)
+                setattr(self, plattform_name, platform)
+                print plattform, 'wird nun nicht mehr angefragt. Mit "+', plattform, '" kannst du es wieder aktivieren.'
+        return plattformbefehl
+
 
 
 def vorbestellungen_schreiben(vorbestellungsdatei):
@@ -329,19 +357,7 @@ while 1:  # Während das Programm läuft
                     webbrowser.open(url)
                     time.sleep(1)
             elif eingabe[0] == '-':
-                plattformbefehl = False
-                # Nur die Plattformen testen, die aktuell angefragt werden. [:]
-                # ist nötig, falls der Nutzer zwei aufeinanderfolgende
-                # Plattformen entfernen will. Mit Eliminieren der ersten würde
-                # die zweite in der folgenden Schleife nicht mehr abgefragt.
-                for plattform in plattformen_requested[:]:
-                    if plattform.lower() in eingabe.lower():
-                        plattformbefehl = True
-                        plattformen_requested.remove(plattform)
-                        # Aktuelle mit leerem Objekt überschreiben.
-                        exec(plattform.lower() + ' = ' +
-                             plattform + '("3981471601")')
-                        print plattform, 'wird nun nicht mehr angefragt. Mit "+', plattform, '" kannst du es wieder aktivieren.'
+                plattformbefehl = PF.remove_requested_platforms(eingabe)
                 if plattformbefehl:
                     continue
                 elif 'lern' in eingabe.lower():
