@@ -218,6 +218,8 @@ class Verkauf(threading.Thread):
                 + self.Porto_dekl[gewicht]
             )
 
+    def log(self, ereignis):
+        log(ereignis)
 
 class Amazon(Verkauf):
 
@@ -255,14 +257,14 @@ class Amazon(Verkauf):
         #preisstr_regexp='<span class="price".*?>EUR (\d+,\d+)</span>'
         # Verbindung
         verbindung = httplib.HTTPSConnection(self.host, timeout=timeout)
-        log('0')
+        self.log('0')
         try:
             verbindung.request('GET', self.pfad)
             response = verbindung.getresponse().read()
             # Fehler abfangen
             if response == '':
                 self.Kommentar += 'Keine Antwort. '
-                log('1')
+                self.log('1')
                 return
             if ergebnislos_string1 in response:
                 #self.Kommentar+='Unbekannter Titel. '
@@ -273,14 +275,14 @@ class Amazon(Verkauf):
                     titel_regexp, response).groups()
             except Exception:
                 self.Kommentar += 'Auslesefehler (Titel). '
-                log('2')
+                self.log('2')
             # Bestseller-Rang
             try:
                 self.Rang_Text = re.search(rang_regexp, response).groups()[0]
                 self.Rang = int(re.sub('\.', '', self.Rang_Text))
             except Exception:
                 #self.Kommentar+='Auslesefehler (Verkaufsrang). '
-                log('3')
+                self.log('3')
             # Auch 'derzeit nicht verfügbare' Bücher haben Titel und
             # Bestsellerrang.
             if ergebnislos_string2 in response:
@@ -294,7 +296,7 @@ class Amazon(Verkauf):
                                   for preis in preisstr]) + 3
             except Exception:
                 self.Kommentar += 'Auslesefehler (Preis). '
-                log('4')
+                self.log('4')
                 return
 
             try:
@@ -302,11 +304,11 @@ class Amazon(Verkauf):
                     re.search(neupreis_regexp, response).groups()[0])
             except Exception:
                 #self.Kommentar+='Auslesefehler (Neupreis). '
-                log('4.5')
+                self.log('4.5')
 
         except Exception:
             self.Kommentar += 'Offline oder Zeitüberschreitung. '
-            log('5')
+            self.log('5')
         if self.Preis:
             self.gewinn()
 
@@ -342,7 +344,7 @@ class ZVAB(Verkauf):
             # Fehler abfangen
             if response == '':
                 self.Kommentar += 'Keine Antwort'
-                log('6')
+                self.log('6')
                 return
             if ergebnislos_string in response:
                 return
@@ -356,10 +358,10 @@ class ZVAB(Verkauf):
                                       for wert in preis_und_porto])
                 except Exception:
                     self.Kommentar += 'Auslesefehler'
-                    log('7')
+                    self.log('7')
         except Exception:
             self.Kommentar += 'Offline oder Zeitüberschreitung. '
-            log('8')
+            self.log('8')
         if self.Preis:
             self.gewinn()
 
@@ -397,7 +399,7 @@ class Booklooker(Verkauf):
             # Fehler abfangen
             if response == '':
                 self.Kommentar += 'Keine Antwort. '
-                log('9')
+                self.log('9')
                 return
             if ergebnislos_string in response:
                 return
@@ -406,7 +408,7 @@ class Booklooker(Verkauf):
                 preisblock = re.search(preisblock_regexp, response).group()
             except Exception:
                 self.Kommentar += 'Auslesefehler (Preis+Porto). '
-                log('10')
+                self.log('10')
                 return
             # Rohpreis laut Booklooker
             try:
@@ -414,7 +416,7 @@ class Booklooker(Verkauf):
                     re.search(rohpreis_regexp, preisblock).groups()[0])
             except Exception:
                 self.Kommentar += 'Auslesefehler (Preis). '
-                log('11')
+                self.log('11')
                 return
             # Porto laut Booklooker
             if '???' in preisblock:
@@ -428,10 +430,10 @@ class Booklooker(Verkauf):
                     self.Preis += self.Porto
                 except Exception:
                     self.Kommentar += 'Auslesefehler (Porto). '
-                    log('12')
+                    self.log('12')
         except Exception:
             self.Kommentar += 'Offline oder Zeitüberschreitung. '
-            log('13')
+            self.log('13')
         if self.Preis:
             self.gewinn()
 
@@ -469,7 +471,7 @@ class Buchfreund(Verkauf):
             # Fehler abfangen
             if response == '':
                 self.Kommentar += 'Keine Antwort. '
-                log('14')
+                self.log('14')
                 return
             if ergebnislos_string in response:
                 #self.Kommentar+='Kein Angebot. '
@@ -479,7 +481,7 @@ class Buchfreund(Verkauf):
                 preisblock = re.search(preisblock_regexp, response).group()
             except Exception:
                 self.Kommentar += 'Auslesefehler (Preis+Porto). '
-                log('15')
+                self.log('15')
                 return
             # Rohpreis
             try:
@@ -487,7 +489,7 @@ class Buchfreund(Verkauf):
                     re.search(rohpreis_regexp, preisblock).groups()[0])
             except Exception:
                 self.Kommentar += 'Auslesefehler (Preis). '
-                log('16')
+                self.log('16')
                 return
             # Porto laut Buchfreund
             try:
@@ -499,10 +501,10 @@ class Buchfreund(Verkauf):
                     self.Preis += self.Porto
             except Exception:
                 self.Kommentar += 'Auslesefehler (Porto). '
-                log('17')
+                self.log('17')
         except Exception:
             self.Kommentar += 'Offline oder Zeitüberschreitung. '
-            log('17.5')
+            self.log('17.5')
 
         if self.Preis:
             self.gewinn()
@@ -525,6 +527,9 @@ class Easyankauf(threading.Thread):
         self.Ausgabe = None
         self.Dauer = None
 
+    def log(self, event):
+        log(event)
+
     def run(self):
         self.Start = time.time()
         # Strings und Regexps
@@ -546,11 +551,11 @@ class Easyankauf(threading.Thread):
                 # Fehler abfangen
                 if response == '':
                     self.Kommentar += 'Keine Antwort. '
-                    log('18')
+                    self.log('18')
                     return None
                 elif ergebnislos_string in response:
                     #self.Kommentar+='Unbekannter Titel. '
-                    log('19')
+                    self.log('19')
                     return None
                 elif requested_string in response:
                     attempts -= 1
@@ -566,7 +571,7 @@ class Easyankauf(threading.Thread):
                             titel_regexp, response).groups()[0]
                     except Exception:
                         self.Kommentar += 'Auslesefehler (Titel). '
-                        log('20')
+                        self.log('20')
 
                     # Ausgabe laut Easyankauf
                     try:
@@ -574,7 +579,7 @@ class Easyankauf(threading.Thread):
                             ausgabe_regexp, response).groups()[0]
                     except Exception:
                         self.Kommentar += 'Auslesefehler (Ausgabe). '
-                        log('21')
+                        self.log('21')
 
                     # Preis laut Easyankauf
                     try:
@@ -587,17 +592,19 @@ class Easyankauf(threading.Thread):
                         return self.Preis
                     except Exception:
                         self.Kommentar += 'Auslesefehler (Preis). '
-                        log('22')
+                        self.log('22')
                         return None
                 else:
                     self.Kommentar += 'Verbindungsfehler [1]. '
-                    log('23')
+                    self.log('23')
                     return None
             self.Kommentar += 'Offline oder Zeitüberschreitung. '
-            log('23.5')
+            self.log('23.5')
         except Exception:
             self.Kommentar += 'Verbindungsfehler [2]. '
-            log('24')
+            self.log('24')
+
+
 
 
 class Ebay(Verkauf):
@@ -652,7 +659,7 @@ class Ebay(Verkauf):
             # Fehler abfangen
             if response == '':
                 self.Kommentar += 'Keine Antwort. '
-                log('25')
+                self.log('25')
                 return
             if ergebnislos_string in response:
                 return  # Kein Angebot
@@ -663,7 +670,7 @@ class Ebay(Verkauf):
                     re.search(preis_regexp, response).groups()[0])
             except Exception:
                 self.Kommentar += 'Auslesefehler (Preis). '
-                log('26')
+                self.log('26')
                 return
 
             # Porto
