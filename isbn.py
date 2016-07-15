@@ -5,6 +5,7 @@
 # Copyright (C) 2007 Darren J Wilkinson
 # Free GPL code
 # Last updated: 14/8/2007
+# Modified by Franziska Hausmann
 
 import sys
 import re
@@ -77,7 +78,7 @@ def convert(isbn):
             stem = short[3:-1]
             return stem + check(stem)
         else:
-            raise "ISBN not convertible"
+            return isbn		# take care, this is unlike D. Wilkinson's original isbn module!
 
 
 def isValid(isbn):
@@ -126,6 +127,11 @@ def isI10(isbn):
     short = isbn_strip(isbn)
     if (len(short) != 10):
         return False
+    # Take care, this is unlike D. Wilkinson's original isbn module! These two
+    # lines prevent 10-character strings such as 'du bist doof' from being
+    # confirmed to be valid ISBNs.
+    if 'X' in short[:-1]:
+        return False
     chars = list(short)
     sum = 0
     digit = 10
@@ -164,6 +170,10 @@ def isI13(isbn):
     """Checks the validity of an ISBN-13 number."""
     short = isbn_strip(isbn)
     if (len(short) != 13):
+        return False
+    # Take care, this is unlike D. Wilkinson's original isbn module. See line
+    # 123.
+    if 'X' in short[:-1]:
         return False
     chars = list(short)
     sum = 0
