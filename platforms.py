@@ -350,9 +350,6 @@ class Easyankauf(threading.Thread):
         self.Ausgabe = None
         self.Dauer = None
 
-    def log(self, event):
-        log(event)
-
     def run(self):
         self.Start = time.time()
         # Strings und Regexps
